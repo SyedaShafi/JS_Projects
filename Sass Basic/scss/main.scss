@@ -1,0 +1,65 @@
+@import 'resets';
+@import 'variables';
+// Functions
+@function weight($weight-name){
+    @return map-get($font-weights, $weight-name )
+}
+//  @mixin, very similar to a function but the main 
+//  difference between the two is that mixins output lines
+//  of Sass code that will compile directly into CSS styles,
+//  while functions return a value that can then become the value for a 
+//  CSS property or become something that might be passed to another function or mixin.
+
+@mixin flexCenter($direction) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: $direction;
+}
+
+@mixin theme($light-theme: true){
+    @if $light-theme{
+        background: lighten($primary-color, 100%);
+        color: darken($text-color, 100%);
+
+    }
+}
+
+@mixin mobile{
+    @media (max-width: $mobile) {
+        @content;
+    }
+}
+body{
+    background: $primary-color;
+    color: $text-color;
+}
+
+.main{
+    @include flexCenter(row);
+    width: 80%;
+    margin: 0 auto;
+    // #{&}__paragraph --> means .main .main__paragraph
+    #{&}__paragraph1{
+        font-weight: weight(bold);
+        &:hover{
+            color:pink;
+        }
+    }
+
+    #{&}__paragraph2{
+        @extend .main__paragraph1;
+        
+        &:hover{
+            color: $accent-color;
+        }
+    }
+
+    @include mobile{
+        flex-direction: column;
+    }
+}
+
+.light{
+    @include theme($light-theme: true);
+}
